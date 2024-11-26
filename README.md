@@ -8,6 +8,7 @@
 ### Descrição do Projeto
 
 Este projeto expande as funcionalidades do trabalho TP2, adicionando as classes `EventoLista`, `ListaInvertida`, `StopWords` para permitir a pesquisa utilizando um índice invertido.
+Além disso, as classes `Rotulo` e `MenuRotulo` permitem que o usuário crie, edite, exclua e vincule rótulos para as suas tarefas.
 
 ### Estrutura de Classes
 
@@ -95,6 +96,7 @@ A classe `StopWords` é responsável por gerenciar e processar palavras de parad
 
 - **ParIdId** e **ParNomeId**: Representam pares de valores para indexação em árvore B+.
 - **HashExtensivel**: Implementa a indexação direta para classes que estendem `RegistroHashExtensivel`.
+- **ElementoLista** e **ListaInvertida**: Implementam uma lista invertida.
 
 ### Menus de Interação
 
@@ -107,13 +109,11 @@ Executa a aplicação, gerenciando o menu principal e capturando interações do
 
 #### Índices e Consistência
 
-- Índice direto de categorias implementado? **Sim**
-- Índice indireto para categorias por nome? **Sim**
-- ID de categoria como chave estrangeira em tarefas? **Sim**
-- Árvore B+ para relação 1:N entre categorias e tarefas? **Sim**
-- Listagem de tarefas por categoria? **Sim**
-- Exclusão de categorias verifica tarefas vinculadas? **Sim**
-- Inclusão de tarefa é limitada a categorias existentes? **Sim**
+- O índice invertido com os termos das tarefas foi criado usando a classe ListaInvertida? **Sim**
+- O CRUD de rótulos foi implementado? **Sim**
+- No arquivo de tarefas, os rótulos são incluídos, alterados e excluídos em uma árvore B+? **Sim**
+- É possível buscar tarefas por palavras usando o índice invertido? **Sim**
+- É possível buscar tarefas por rótulos usando uma árvore B+? **Sim**
 
 #### Estado do Projeto
 
