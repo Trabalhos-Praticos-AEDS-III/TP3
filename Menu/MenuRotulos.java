@@ -5,12 +5,13 @@ import Modelo.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class MenuRotulos {
-    public static ArquivoRotulo arqRotulo;
+public class MenuRotulos
+ {
+    public static ArquivoRotulo arq_rotulo;
     Scanner scanf = new Scanner(System.in);
 
     public void menu() throws Exception {
-      arqRotulo = new ArquivoRotulo();
+      arq_rotulo = new ArquivoRotulo();
       int resposta = 0;
       System.out.println("\n> Inicio > Rotulos" );
 
@@ -51,7 +52,7 @@ public class MenuRotulos {
       try
       {
         System.out.println("Digite o nome da Rotulo a ser Criada");
-        arqRotulo.create(scanf.nextLine());
+        arq_rotulo.create(scanf.nextLine());
       }
       catch (Exception e)
       {
@@ -59,20 +60,21 @@ public class MenuRotulos {
       }
       System.out.println("Criado com sucesso");
       System.out.println();
-      arqRotulo.listar();
+      arq_rotulo.listar();
     }
 
-    public void listarRotulo() throws Exception {
-      String nomeRotulo;
+    public void listarRotulo() throws Exception 
+    {
+      String nome_rotulo;
       try
       {
-        arqRotulo.listar();
+        arq_rotulo.listar();
         
         System.out.print("\nDigite o nome da Rotulo que deseja listar as tarefas: ");
 
-        nomeRotulo = scanf.nextLine();
+        nome_rotulo = scanf.nextLine();
 
-        ArrayList<Tarefa> t = arqRotulo.read(nomeRotulo);
+        ArrayList<Tarefa> t = arq_rotulo.read(nome_rotulo);
 
         // Itera sobre os rotulos
         for (Tarefa tmp : t)
@@ -89,19 +91,19 @@ public class MenuRotulos {
 
     public void atualizarRotulo() throws Exception
     {
-      String nomeRotulo, novaRotulo;
+      String nome_rotulo, novo_rotulo;
       try
       {
-        arqRotulo.listar();
+        arq_rotulo.listar();
 
         System.out.print("Digite o nome do Rotulo que deseja atualizar: "); 
-        nomeRotulo = scanf.nextLine();
+        nome_rotulo = scanf.nextLine();
 
-        ArrayList<Rotulo> t = arqRotulo.listar();
+        ArrayList<Rotulo> t = arq_rotulo.listar();
         boolean find = false;
         for (Rotulo tmp : t) 
         {
-          if (tmp.getNome().equals(nomeRotulo)) find = true;
+          if (tmp.getNome().equals(nome_rotulo)) find = true;
         }
         if (find == false)
         {
@@ -110,9 +112,9 @@ public class MenuRotulos {
         }
 
         System.out.println("Digite o nome do novo Rotulo");
-        novaRotulo = scanf.nextLine();
+        novo_rotulo = scanf.nextLine();
 
-        arqRotulo.update(nomeRotulo, novaRotulo);
+        arq_rotulo.update(nome_rotulo, novo_rotulo);
       }
       catch (Exception e)
       {
@@ -123,10 +125,10 @@ public class MenuRotulos {
 
     public void deletarRotulo() throws Exception
     {
-      String nomeRotulo;
+      String nome_rotulo;
       try
       {
-        ArrayList<Rotulo> Rotulos = arqRotulo.listar();
+        ArrayList<Rotulo> Rotulos = arq_rotulo.listar();
         System.out.println();
 
         System.out.print("Digite o índice da Rotulo que deseja deletar: ");
@@ -137,8 +139,8 @@ public class MenuRotulos {
           return;
         }
         
-        nomeRotulo = Rotulos.get(index - 1).getNome();
-        if (arqRotulo.delete(nomeRotulo))
+        nome_rotulo = Rotulos.get(index - 1).getNome();
+        if (arq_rotulo.delete(nome_rotulo))
         {
           System.out.println("Deletado com sucesso");
         }

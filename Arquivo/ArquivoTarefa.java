@@ -12,7 +12,7 @@ public class ArquivoTarefa extends Arquivo<Tarefa>
 {
     Arquivo<Tarefa> arq_tarefa; // Arquivo de tarefas
     ArvoreBMais<ParIdId> indice_indireto_id; // Índice indireto para armazenar pares (id_categoria, id_tarefa)
-    ArvoreBMais<ParIDRotulocID> arvoreB2; // Árvore B+ para associação de rótulos com tarefas
+    ArvoreBMais<ParIDRotulocID> arvore; // Árvore B+ para associação de rótulos com tarefas
     StopWords stopWords; // Gerenciador de stopwords
 
     // Construtor que inicializa o arquivo de tarefas e os índices
@@ -20,7 +20,7 @@ public class ArquivoTarefa extends Arquivo<Tarefa>
     {
         super("tarefas", Tarefa.class.getConstructor());
         indice_indireto_id = new ArvoreBMais<>(ParIdId.class.getConstructor(),5, "./dados/indice_indireto_id.btree.db");
-        arvoreB2 = new ArvoreBMais<>(ParIDRotulocID.class.getConstructor(), 5, "./dados/ArvoreTarefasRotulos.btree.db");        
+        arvore = new ArvoreBMais<>(ParIDRotulocID.class.getConstructor(), 5, "./dados/ArvoreTarefasRotulos.btree.db");        
         stopWords = new StopWords(); // Inicializa a estrutura para lidar com stopwords
     }
 
@@ -30,9 +30,9 @@ public class ArquivoTarefa extends Arquivo<Tarefa>
     {
         int id = super.create(c); // Cria a tarefa e obtém o ID gerado
         indice_indireto_id.create(new ParIdId(c.getIdCategoria(), id)); // Adiciona ao índice indireto
-        ArrayList<Integer> idRotulos = c.getIDRotulo(); // Obtém os IDs dos rótulos
-        for(int i = 0; i < idRotulos.size(); i++) {
-            arvoreB2.create(new ParIDRotulocID(idRotulos.get(i), id)); // Associa rótulos às tarefas
+        ArrayList<Integer> id_rotulos = c.getIDRotulo(); // Obtém os IDs dos rótulos
+        for(int i = 0; i < id_rotulos.size(); i++) {
+            arvore.create(new ParIDRotulocID(id_rotulos.get(i), id)); // Associa rótulos às tarefas
         }
         stopWords.inserir(c.getNome(), id); // Insere palavras associadas à tarefa no gerenciador de stopwords
         return id;
@@ -60,24 +60,29 @@ public class ArquivoTarefa extends Arquivo<Tarefa>
     }
     
     // Lê tarefas associadas a um rótulo específico
-    public ArrayList<Tarefa> read(ParRotuloId parRotuloId) throws Exception {
+    public ArrayList<Tarefa> read(ParRotuloId parRotuloId) throws Exception 
+    {
         ArrayList<Tarefa> t = new ArrayList<>();
-        ArrayList<ParIDRotulocID> id = arvoreB2.read(new ParIDRotulocID(parRotuloId.getId())); // Busca associações de rótulos
-        for(int i = 0; i < id.size(); i++) {
+        ArrayList<ParIDRotulocID> id = arvore.read(new ParIDRotulocID(parRotuloId.getId())); // Busca associações de rótulos
+        for(int i = 0; i < id.size(); i++) 
+        {
             t.add(super.read(id.get(i).getId2())); // Adiciona as tarefas à lista
         }
         return t;
     }
 
     // Deleta uma tarefa, removendo-a dos índices e stopwords
-    public boolean delete(Tarefa tarefa) {
+    public boolean delete(Tarefa tarefa) 
+    {
         boolean result = false;
-        try {
+        try 
+        {
             result = super.delete(tarefa.getId()) ? indice_indireto_id.delete(new ParIdId(tarefa.getIdCategoria(), tarefa.getId())) : false;
             String[] chaves = stopWords.stopWordsCheck(tarefa.getNome()); // Obtém palavras associadas à tarefa
-            ArrayList<Integer> idRotulos = tarefa.getIDRotulo(); // Obtém os IDs dos rótulos
-            for(int i = 0; i < idRotulos.size(); i++) {
-                arvoreB2.delete(new ParIDRotulocID(idRotulos.get(i), tarefa.getId())); // Remove as associações de rótulos
+            ArrayList<Integer> id_rotulos = tarefa.getIDRotulo(); // Obtém os IDs dos rótulos
+            for(int i = 0; i < id_rotulos.size(); i++) 
+            {
+                arvore.delete(new ParIDRotulocID(id_rotulos.get(i), tarefa.getId())); // Remove as associações de rótulos
             }
             for(int i = 0; i < chaves.length; i++) {
                 chaves[i] = chaves[i].toLowerCase();
@@ -116,11 +121,11 @@ public class ArquivoTarefa extends Arquivo<Tarefa>
         for(int i = 0; i < chaves.length; i++) {
             if(!chaves[i].isEmpty()) {
                 try {
-                    ElementoLista[] elementoEncontrados = stopWords.lista.read(chaves[i]); // Busca elementos na lista invertida
-                    if(elementoEncontrados != null) {
-                        for(ElementoLista elemento : elementoEncontrados) {
+                    ElementoLista[] elementos_listas = stopWords.lista.read(chaves[i]); // Busca elementos na lista invertida
+                    if(elementos_listas != null) {
+                        for(ElementoLista elemento : elementos_listas) {
                             float frequencia = elemento.getFrequencia(); // Calcula a relevância da tarefa
-                            float idf = stopWords.lista.numeroEntidades() / (float) elementoEncontrados.length;
+                            float idf = stopWords.lista.numeroEntidades() / (float) elementos_listas.length;
                             ElementoLista elementoAux = new ElementoLista(elemento.getId(), frequencia * idf);
                             boolean existe = false;
                             for(ElementoLista e : elementos) {
@@ -164,7 +169,7 @@ public class ArquivoTarefa extends Arquivo<Tarefa>
             ArrayList<Integer> idRotulo = tarefa.getIDRotulo(); // Obtém os rótulos atuais da tarefa
             for(Integer removeId : removed) {
                 if(idRotulo.contains(removeId)) {
-                    arvoreB2.delete(new ParIDRotulocID(removeId, tarefa.getId())); // Remove rótulo do índice
+                    arvore.delete(new ParIDRotulocID(removeId, tarefa.getId())); // Remove rótulo do índice
                     idRotulo.remove(removeId);
                 } else {
                     System.out.println("Rótulo não encontrado");
@@ -173,7 +178,7 @@ public class ArquivoTarefa extends Arquivo<Tarefa>
             for(Integer addId : added) {
                 if(!idRotulo.contains(addId)) {
                     idRotulo.add(addId); // Adiciona o novo rótulo
-                    arvoreB2.create(new ParIDRotulocID(addId, tarefa.getId())); // Atualiza o índice
+                    arvore.create(new ParIDRotulocID(addId, tarefa.getId())); // Atualiza o índice
                 } else {
                     System.out.println("Rótulo já existente");
                 }

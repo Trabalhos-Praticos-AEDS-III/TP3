@@ -199,7 +199,7 @@ public class MenuTarefas {
     public void alterarTarefa() throws Exception
     {
         String termo;
-        int numeroTarefa = -1;
+        int numero_tarefa = -1;
         Tarefa t = new Tarefa(), old;
         ArrayList<Tarefa> tarefas = null;
     
@@ -225,19 +225,19 @@ public class MenuTarefas {
                 }
             }
     
-            while (numeroTarefa < 0 || numeroTarefa > tarefas.size())
+            while (numero_tarefa < 0 || numero_tarefa > tarefas.size())
             {
                 System.out.println("Digite o número da Tarefa que deseja atualizar\nObs: digite 0 para cancelar");
                 try
                 {
-                    numeroTarefa = Integer.valueOf(sc.nextLine());
+                    numero_tarefa = Integer.valueOf(sc.nextLine());
 
-                    if (numeroTarefa == 0)
+                    if (numero_tarefa == 0)
                     {
                         System.out.println("Operação cancelada.");
                         return;
                     }
-                    if (numeroTarefa < 0 || numeroTarefa > tarefas.size())
+                    if (numero_tarefa < 0 || numero_tarefa > tarefas.size())
                     {
                         System.out.println("Tarefa não encontrada, tente novamente");
                     }
@@ -247,7 +247,7 @@ public class MenuTarefas {
                     System.err.println("Erro ao selecionar tarefa: " + e.getMessage());
                 }
             }
-            old = tarefas.get(numeroTarefa - 1);
+            old = tarefas.get(numero_tarefa - 1);
             System.out.println("Tarefa Selecionada: " + old.getNome());
 
             System.out.println("\nNovos dados da tarefa: ");
@@ -309,7 +309,7 @@ public class MenuTarefas {
     try
     {
         String termo;
-        int numeroTarefa = -1;
+        int numero_tarefa = -1;
         ArrayList<Tarefa> tarefas = null;
 
         while(tarefas == null || tarefas.size() == 0)
@@ -323,16 +323,16 @@ public class MenuTarefas {
             return;
           }
         }
-        while (numeroTarefa < 0 || numeroTarefa > tarefas.size())
+        while (numero_tarefa < 0 || numero_tarefa > tarefas.size())
         {
           System.out.println("Digite o número da Tarefa que deseja deletar\nObs: digite 0 para cancelar");
-          numeroTarefa = sc.nextInt();
-          if (numeroTarefa < 0 || numeroTarefa > tarefas.size())
+          numero_tarefa = sc.nextInt();
+          if (numero_tarefa < 0 || numero_tarefa > tarefas.size())
           {
             System.out.println("Tarefa não encontrada, tente novamente");
           }
         }
-        if (arq_tarefa.delete(tarefas.get(numeroTarefa - 1)))
+        if (arq_tarefa.delete(tarefas.get(numero_tarefa - 1)))
         {
           System.out.println("Tarefa deletada com sucesso");
         }
@@ -390,14 +390,14 @@ public class MenuTarefas {
       try
       {
         
-          int numeroTarefa = 1;
+          int numero_tarefa = 1;
           termo = termo.toLowerCase();
           tarefas = arq_tarefa.listar(termo);
           for (Tarefa tmp : tarefas)
           {
-            System.out.print("\nN° Tarefa.....: " + numeroTarefa);
+            System.out.print("\nN° Tarefa.....: " + numero_tarefa);
             System.out.println(tmp);
-            numeroTarefa++;
+            numero_tarefa++;
           }
         }
         catch (Exception e)
@@ -412,7 +412,7 @@ public class MenuTarefas {
         
         try
         {
-          int numeroTarefa = 1;
+          int numero_tarefa = 1;
           System.out.print("Digite o termo que deseja buscar no banco de tarefas: ");
           String titulo = sc.nextLine();
           titulo = titulo.toLowerCase();
@@ -427,9 +427,9 @@ public class MenuTarefas {
 
           for (Tarefa tmp : tarefas)
           {
-            System.out.print("\nN° Tarefa.....: " + numeroTarefa);
+            System.out.print("\nN° Tarefa.....: " + numero_tarefa);
             System.out.println(tmp);
-            numeroTarefa++;
+            numero_tarefa++;
 
           }
         }
@@ -442,7 +442,7 @@ public class MenuTarefas {
     public void atualizarRotulo() throws Exception
     {
         String termo;
-        int numeroTarefa = -1;
+        int numero_tarefa = -1;
         Tarefa old = new Tarefa();
         ArrayList<Tarefa> tarefas = null;
         
@@ -461,20 +461,20 @@ public class MenuTarefas {
               return;
             }
           }
-          while (numeroTarefa < 0 || numeroTarefa > tarefas.size())
+          while (numero_tarefa < 0 || numero_tarefa > tarefas.size())
           {
             System.out.println("Digite o número da Tarefa que deseja atualizar");
-            numeroTarefa = sc.nextInt();
-            if (numeroTarefa < 0 || numeroTarefa > tarefas.size())
+            numero_tarefa = sc.nextInt();
+            if (numero_tarefa < 0 || numero_tarefa > tarefas.size())
             {
               System.out.println("Tarefa não encontrada, tente novamente");
             }
-            else if(numeroTarefa == 0)
+            else if(numero_tarefa == 0)
             {
               return;
             }
           }
-          old = tarefas.get(numeroTarefa - 1);
+          old = tarefas.get(numero_tarefa - 1);
           System.out.println("Tarefa Selecionada: " + old.getNome());
         }
         catch (Exception e)
