@@ -463,7 +463,7 @@ public class MenuTarefas {
           }
           while (numeroTarefa < 0 || numeroTarefa > tarefas.size())
           {
-            System.out.println("Digite o número da Tarefa que deseja atualizar\nObs: digite 0 para cancelar (favor ignorar a mensagem de erro)");
+            System.out.println("Digite o número da Tarefa que deseja atualizar");
             numeroTarefa = sc.nextInt();
             if (numeroTarefa < 0 || numeroTarefa > tarefas.size())
             {
