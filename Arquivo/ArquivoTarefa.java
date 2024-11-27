@@ -31,7 +31,8 @@ public class ArquivoTarefa extends Arquivo<Tarefa>
         int id = super.create(c); // Cria a tarefa e obtém o ID gerado
         indice_indireto_id.create(new ParIdId(c.getIdCategoria(), id)); // Adiciona ao índice indireto
         ArrayList<Integer> id_rotulos = c.getIDRotulo(); // Obtém os IDs dos rótulos
-        for(int i = 0; i < id_rotulos.size(); i++) {
+        for(int i = 0; i < id_rotulos.size(); i++) 
+        {
             arvore.create(new ParIDRotulocID(id_rotulos.get(i), id)); // Associa rótulos às tarefas
         }
         stopWords.inserir(c.getNome(), id); // Insere palavras associadas à tarefa no gerenciador de stopwords
@@ -96,66 +97,82 @@ public class ArquivoTarefa extends Arquivo<Tarefa>
     }
 
     // Atualiza uma tarefa e ajusta as associações no gerenciador de stopwords
-    public boolean update(Tarefa tarefa, Tarefa update) {
+    public boolean update(Tarefa tarefa, Tarefa update) 
+    {
         boolean result = false;
         update.setId(tarefa.getId()); // Mantém o ID original da tarefa
 
-        try {
+        try 
+        {
             String[] chaves = stopWords.stopWordsCheck(tarefa.getNome()); // Obtém palavras da tarefa antiga
-            for(int i = 0; i < chaves.length; i++) {
+            for(int i = 0; i < chaves.length; i++) 
+            {
                 chaves[i] = chaves[i].toLowerCase();
                 stopWords.lista.delete(chaves[i], tarefa.getId()); // Remove palavras da tarefa antiga
             }
             stopWords.inserir(update.getNome(), update.getId()); // Insere palavras da nova tarefa
             result = super.update(update); // Atualiza a tarefa no arquivo
-        } catch(Exception e) {
+        } catch(Exception e) 
+        {
             System.out.println(e.getMessage()); // Tratamento de erro
         }
         return result;
     }
 
     // Lista tarefas baseadas em palavras-chave, utilizando stopwords
-    public ArrayList<Tarefa> listar(String titulo) throws Exception {
+    public ArrayList<Tarefa> listar(String titulo) throws Exception 
+    {
         ArrayList<ElementoLista> elementos = new ArrayList<>();
         String[] chaves = stopWords.stopWordsCheck(titulo); // Divide o título em palavras-chave
-        for(int i = 0; i < chaves.length; i++) {
-            if(!chaves[i].isEmpty()) {
-                try {
+        for(int i = 0; i < chaves.length; i++) 
+        {
+            if(!chaves[i].isEmpty()) 
+            {
+                try 
+                {
                     ElementoLista[] elementos_listas = stopWords.lista.read(chaves[i]); // Busca elementos na lista invertida
                     if(elementos_listas != null) {
-                        for(ElementoLista elemento : elementos_listas) {
+                        for(ElementoLista elemento : elementos_listas) 
+                        {
                             float frequencia = elemento.getFrequencia(); // Calcula a relevância da tarefa
                             float idf = stopWords.lista.numeroEntidades() / (float) elementos_listas.length;
                             ElementoLista elementoAux = new ElementoLista(elemento.getId(), frequencia * idf);
                             boolean existe = false;
-                            for(ElementoLista e : elementos) {
-                                if(e.getId() == elementoAux.getId()) {
+                            for(ElementoLista e : elementos) 
+                            {
+                                if(e.getId() == elementoAux.getId()) 
+                                {
                                     e.setFrequencia(e.getFrequencia() + elementoAux.getFrequencia());
                                     existe = true;
                                     break;
                                 }
                             }
-                            if(!existe) {
+                            if(!existe) 
+                            {
                                 elementos.add(elementoAux);
                             }
                         }
                     }
-                } catch(Exception e) {
+                } catch(Exception e) 
+                {
                     System.out.println(e.getMessage());
                 }
             }
         }
 
         // Ordena os elementos pela relevância em ordem decrescente
-        Collections.sort(elementos, new Comparator<ElementoLista>() {
+        Collections.sort(elementos, new Comparator<ElementoLista>() 
+        {
             @Override
-            public int compare(ElementoLista e1, ElementoLista e2) {
+            public int compare(ElementoLista e1, ElementoLista e2) 
+            {
                 return Float.compare(e2.getFrequencia(), e1.getFrequencia());
             }
         });
 
         ArrayList<Tarefa> tarefas = new ArrayList<>();
-        for(ElementoLista elemento : elementos) {
+        for(ElementoLista elemento : elementos) 
+        {
             tarefas.add(super.read(elemento.getId())); // Adiciona as tarefas à lista
         }
 
@@ -163,29 +180,38 @@ public class ArquivoTarefa extends Arquivo<Tarefa>
     }
 
     // Atualiza os rótulos associados a uma tarefa
-    public boolean updateRotulos(Tarefa tarefa, ArrayList<Integer> removed, ArrayList<Integer> added) {
+    public boolean updateRotulos(Tarefa tarefa, ArrayList<Integer> removed, ArrayList<Integer> added) 
+    {
         boolean result = false;
-        try {
+        try 
+        {
             ArrayList<Integer> idRotulo = tarefa.getIDRotulo(); // Obtém os rótulos atuais da tarefa
-            for(Integer removeId : removed) {
-                if(idRotulo.contains(removeId)) {
+            for(Integer removeId : removed) 
+            {
+                if(idRotulo.contains(removeId)) 
+                {
                     arvore.delete(new ParIDRotulocID(removeId, tarefa.getId())); // Remove rótulo do índice
                     idRotulo.remove(removeId);
-                } else {
+                } else 
+                {
                     System.out.println("Rótulo não encontrado");
                 }
             }
-            for(Integer addId : added) {
-                if(!idRotulo.contains(addId)) {
+            for(Integer addId : added) 
+            {
+                if(!idRotulo.contains(addId)) 
+                {
                     idRotulo.add(addId); // Adiciona o novo rótulo
                     arvore.create(new ParIDRotulocID(addId, tarefa.getId())); // Atualiza o índice
-                } else {
+                } else 
+                {
                     System.out.println("Rótulo já existente");
                 }
             }
             tarefa.setIdRotulos(idRotulo); // Atualiza os rótulos da tarefa
             result = super.update(tarefa); // Persiste as alterações no arquivo
-        } catch(Exception e) {
+        } catch(Exception e) 
+        {
             System.out.println(e.getMessage());
         }
         return result;

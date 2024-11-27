@@ -1,14 +1,15 @@
 package Arvore;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
-import java.io.IOException;
 
-public class ParRotuloId implements Registro.RegistroArvoreBMais<ParRotuloId>{
+public class ParRotuloId implements Registro.RegistroArvoreBMais<ParRotuloId>
+{
 
     /* Atributos */
     private String nome;
@@ -16,15 +17,18 @@ public class ParRotuloId implements Registro.RegistroArvoreBMais<ParRotuloId>{
     private short TAMANHO = 30;
   
     /* Construtores */
-    public ParRotuloId() throws Exception {
+    public ParRotuloId() throws Exception 
+    {
       this("", -1);
     }
   
-    public ParRotuloId(String n) throws Exception {
+    public ParRotuloId(String n) throws Exception 
+    {
       this(n, -1);
     }
   
-    public ParRotuloId(String n, int i) throws Exception {
+    public ParRotuloId(String n, int i) throws Exception 
+    {
       if(n.getBytes().length>26)
         throw new Exception("Nome extenso demais. Diminua o número de caracteres.");
       this.nome = n; // ID do Usuário
@@ -33,29 +37,35 @@ public class ParRotuloId implements Registro.RegistroArvoreBMais<ParRotuloId>{
 
     /* GET's */
 
-    public String getNome(){
+    public String getNome()
+    {
         return this.nome;
     }
 
-    public int getId(){
+    public int getId()
+    {
         return this.id;
     }
     
     /* SET's */
 
-    public void setNome(String nome){
+    public void setNome(String nome)
+    {
         this.nome = nome;
     }
 
-    public void setId(int id){
+    public void setId(int id)
+    {
         this.id = id;
     }
 
     
     /* Clone */
     @Override
-    public ParRotuloId clone() {
-      try {
+    public ParRotuloId clone() 
+    {
+      try 
+      {
         return new ParRotuloId(this.nome, this.id);
       } catch (Exception e) {
         e.printStackTrace();
@@ -64,21 +74,25 @@ public class ParRotuloId implements Registro.RegistroArvoreBMais<ParRotuloId>{
     }
     
     /* Retorna o Tamanho do Registro */
-    public short size() {
+    public short size() 
+    {
       return this.TAMANHO;
     }
     
     /* Comparação */
-    public int compareTo(ParRotuloId a) {
+    public int compareTo(ParRotuloId a) 
+    {
       return transforma(this.nome).compareTo(transforma(a.nome));
     }
     
     /* Formatação da String */
-    public String toString() {
+    public String toString() 
+    {
       return this.nome + ";" + String.format("%-3d", this.id);
     }
   
-    public byte[] toByteArray() throws IOException {
+    public byte[] toByteArray() throws IOException 
+    {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       DataOutputStream dos = new DataOutputStream(baos);
       byte[] vb = new byte[26];
@@ -97,7 +111,8 @@ public class ParRotuloId implements Registro.RegistroArvoreBMais<ParRotuloId>{
       return baos.toByteArray();
     }
   
-    public void fromByteArray(byte[] ba) throws IOException {
+    public void fromByteArray(byte[] ba) throws IOException 
+    {
       ByteArrayInputStream bais = new ByteArrayInputStream(ba);
       DataInputStream dis = new DataInputStream(bais);
       byte[] vb = new byte[26];
@@ -106,7 +121,8 @@ public class ParRotuloId implements Registro.RegistroArvoreBMais<ParRotuloId>{
       this.id = dis.readInt();
     }
   
-    public static String transforma(String str) {
+    public static String transforma(String str) 
+    {
       String nfdNormalizedString = Normalizer.normalize(str, Normalizer.Form.NFD);
       Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
       return pattern.matcher(nfdNormalizedString).replaceAll("").toLowerCase();

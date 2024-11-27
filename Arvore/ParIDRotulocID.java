@@ -14,30 +14,37 @@ public class ParIDRotulocID implements Registro.RegistroArvoreBMais<ParIDRotuloc
     private int id2;
     private final short TAMANHO = 8;
 
-    public ParIDRotulocID() {
+    public ParIDRotulocID() 
+    {
         this(-1, -1);
     }
 
-    public ParIDRotulocID(int id1) {
+    public ParIDRotulocID(int id1) 
+    {
         this(id1, -1);
     }
 
-    public ParIDRotulocID(int id1, int id2) {
-        try {
+    public ParIDRotulocID(int id1, int id2) 
+    {
+        try 
+        {
             this.id1 = id1;
             this.id2 = id2;
-        } catch (Exception e) {
+        } catch (Exception e) 
+        {
             e.printStackTrace();
         }
     }
 
     /* SET's */
-    public void setId1(int id1) {
+    public void setId1(int id1) 
+    {
 
         this.id1 = id1;
     }
 
-    public void setId2(int id2) {
+    public void setId2(int id2) 
+    {
 
         this.id2 = id2;
     }
@@ -45,12 +52,14 @@ public class ParIDRotulocID implements Registro.RegistroArvoreBMais<ParIDRotuloc
     /* Fim dos Set's */
 
     /* GET's */
-    public int getId1() {
+    public int getId1() 
+    {
 
         return id1;
     }
 
-    public int getId2() {
+    public int getId2() 
+    {
 
         return id2;
     }
@@ -59,27 +68,34 @@ public class ParIDRotulocID implements Registro.RegistroArvoreBMais<ParIDRotuloc
 
     @Override
 
-    public ParIDRotulocID clone() {
+    public ParIDRotulocID clone() 
+    {
         return new ParIDRotulocID(this.id1, this.id2);
     }
 
-    public short size() {
+    public short size() 
+    {
         return this.TAMANHO;
     }
 
-    public int compareTo(ParIDRotulocID a) {
-        if (this.id1 != a.id1) {
+    public int compareTo(ParIDRotulocID a) 
+    {
+        if (this.id1 != a.id1) 
+        {
             return this.id1 - a.id1;
-        } else {
+        } else 
+        {
             return this.id2 == -1 ? 0 : this.id2 - a.id2;
         }
     }
 
-    public String toString() {
+    public String toString() 
+    {
         return String.format("%3d", this.id1) + ";" + String.format("%-3d", this.id2);
     }
 
-    public byte[] toByteArray() throws IOException {
+    public byte[] toByteArray() throws IOException 
+    {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
         dos.writeInt(this.id1);
@@ -87,7 +103,8 @@ public class ParIDRotulocID implements Registro.RegistroArvoreBMais<ParIDRotuloc
         return baos.toByteArray();
     }
 
-    public void fromByteArray(byte[] ba) throws IOException {
+    public void fromByteArray(byte[] ba) throws IOException 
+    {
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);
         this.id1 = dis.readInt();
